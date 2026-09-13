@@ -24,7 +24,7 @@ from pathlib import Path
 
 try:
     from sgp4 import omm
-    from sgp4.api import SGP4_ERRORS, Satrec, SatrecArray, accelerated, jday
+    from sgp4.api import Satrec, SatrecArray, accelerated, jday
 except ImportError:
     sys.exit("sgp4가 없습니다. 실행: uv run --python 3.12 --with sgp4 python analyze/propagate_bench.py")
 
@@ -64,7 +64,7 @@ def propagate(sats: list[Satrec], jd: np.ndarray, fr: np.ndarray) -> tuple[float
     """(소요 시간, 상태 벡터 수, 오류 수)"""
     arr = SatrecArray(sats)
     t0 = time.perf_counter()
-    e, r, v = arr.sgp4(jd, fr)
+    e, _r, _v = arr.sgp4(jd, fr)  # 위치·속도는 비용 측정에 쓰지 않는다 (메모리만 차지)
     elapsed = time.perf_counter() - t0
     return elapsed, int(e.size), int(np.count_nonzero(e))
 
