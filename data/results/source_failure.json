@@ -1,0 +1,97 @@
+{
+  "measured_at": "2026-09-13T02:48:03Z",
+  "setup": {
+    "pattern": [
+      200,
+      200,
+      403,
+      403,
+      599,
+      200
+    ],
+    "cycle_hours": 2,
+    "freshness_slo_hours": 3.0,
+    "note": "로컬 가짜 소스에 실제 수집 코드를 붙여 돌렸다. 로직은 운영과 같은 파일이다."
+  },
+  "timeline": [
+    {
+      "cycle": 1,
+      "source_status": 200,
+      "fetch_result": "ok",
+      "http": 200,
+      "served_data_age_h": 0.0,
+      "as_is_marked": false,
+      "as_is_alert": false,
+      "to_be_marked": true,
+      "to_be_alert": false,
+      "retried": false
+    },
+    {
+      "cycle": 2,
+      "source_status": 200,
+      "fetch_result": "ok",
+      "http": 200,
+      "served_data_age_h": 0.0,
+      "as_is_marked": false,
+      "as_is_alert": false,
+      "to_be_marked": true,
+      "to_be_alert": false,
+      "retried": false
+    },
+    {
+      "cycle": 3,
+      "source_status": 403,
+      "fetch_result": "http_error",
+      "http": 403,
+      "served_data_age_h": 2.0,
+      "as_is_marked": false,
+      "as_is_alert": false,
+      "to_be_marked": true,
+      "to_be_alert": false,
+      "retried": false
+    },
+    {
+      "cycle": 4,
+      "source_status": 403,
+      "fetch_result": "http_error",
+      "http": 403,
+      "served_data_age_h": 4.0,
+      "as_is_marked": false,
+      "as_is_alert": false,
+      "to_be_marked": true,
+      "to_be_alert": true,
+      "retried": false
+    },
+    {
+      "cycle": 5,
+      "source_status": 599,
+      "fetch_result": "error",
+      "http": null,
+      "served_data_age_h": 6.0,
+      "as_is_marked": false,
+      "as_is_alert": false,
+      "to_be_marked": true,
+      "to_be_alert": true,
+      "retried": false
+    },
+    {
+      "cycle": 6,
+      "source_status": 200,
+      "fetch_result": "ok",
+      "http": 200,
+      "served_data_age_h": 0.0,
+      "as_is_marked": false,
+      "as_is_alert": false,
+      "to_be_marked": true,
+      "to_be_alert": false,
+      "retried": false
+    }
+  ],
+  "summary": {
+    "stale_cycles": 3,
+    "max_served_age_h": 6.0,
+    "as_is": "3개 주기 동안 최대 6.0시간 낡은 데이터를 제공했고, 그 사실을 알리는 신호는 없었다",
+    "to_be": "같은 상황에서 2번 경보가 발생했고, 응답에는 매번 기준 시각이 붙었다",
+    "retry_on_403": "없음 — 데이터 제공처 정책(non-200 시 즉시 중단)을 코드가 강제한다"
+  }
+}

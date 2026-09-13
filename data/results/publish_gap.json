@@ -1,0 +1,29 @@
+{
+  "measured_at": "2026-09-13T02:47:54Z",
+  "setup": {
+    "documents": 60000,
+    "batch": 5000,
+    "poll_interval_ms": 10.0,
+    "mongodb": "8.2.4",
+    "note": "조회하는 쪽은 게시가 도는 동안 계속 결과 건수를 센다"
+  },
+  "as_is_full_replace": {
+    "publish_s": 0.344,
+    "polls": 53,
+    "empty": 1,
+    "partial": 18,
+    "complete": 34,
+    "incomplete_share_pct": 35.85,
+    "gap_window_ms": 318.3
+  },
+  "to_be_versioned_swap": {
+    "publish_s": 0.178,
+    "polls": 40,
+    "empty": 0,
+    "partial": 0,
+    "complete": 40,
+    "incomplete_share_pct": 0.0,
+    "gap_window_ms": 0.0
+  },
+  "headline": "통째 교체는 318ms 동안 조회 결과가 비거나 불완전했고, 버전 교체는 0.0%였다"
+}

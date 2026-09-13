@@ -4,9 +4,11 @@ name: collect
 # - CelesTrak GP는 2시간마다 갱신되고 "갱신당 1회"만 받도록 정해져 있다.
 # - 분(minute)을 17로 둔 이유: 정각은 GitHub Actions 부하가 몰려 지연이 크고,
 #   데이터 제공처에도 요청이 몰리는 시각이다. (Space-Track도 정각·30분을 피하라고 권고한다)
+# 매시 폴링하되, 실제 요청 여부는 스크립트의 정책 게이트가 정한다.
+# (Space-Track이 GP를 "시간당 1회"까지 허용하는 것과 같은 모양 — 폴링 주기와 요청 주기를 분리한다)
 on:
   schedule:
-    - cron: "17 */2 * * *"
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:
