@@ -1,0 +1,71 @@
+name: collect
+
+# 2시간마다 공개 궤도 데이터를 한 번 받아 변경분을 재고, 결과를 정적 페이지로 배포한다.
+# - CelesTrak GP는 2시간마다 갱신되고 "갱신당 1회"만 받도록 정해져 있다.
+# - 분(minute)을 17로 둔 이유: 정각은 GitHub Actions 부하가 몰려 지연이 크고,
+#   데이터 제공처에도 요청이 몰리는 시각이다. (Space-Track도 정각·30분을 피하라고 권고한다)
+on:
+  schedule:
+    - cron: "17 */2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 예약 시각 계산 (스케줄 지연 측정용)
+        if: github.event_name == 'schedule'
+        run: |
+          python - <<'PY' >> "$GITHUB_ENV"
+          import datetime as d
+          n = d.datetime.now(d.timezone.utc)
+          slot = n.replace(hour=n.hour - (n.hour % 2), minute=17, second=0, microsecond=0)
+          if slot > n:
+              slot -= d.timedelta(hours=2)
+          print(f"SCHEDULED_AT={slot.strftime('%Y-%m-%dT%H:%M:%SZ')}")
+          PY
+
+      - name: 수집 (정책 준수, 실패해도 멈추지 않음)
+        run: python collect/fetch_gp.py
+
+      - name: 스냅샷 통계
+        run: python analyze/snapshot_stats.py || echo "스냅샷 없음 — 직전 결과 유지"
+
+      - name: 변경 감지
+        run: python analyze/diff_snapshots.py || echo "스냅샷 없음 — 직전 결과 유지"
+
+      - name: 정적 페이지 생성
+        run: python site/build_site.py
+
+      - name: 결과 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/manifest.jsonl data/results data/state || true
+          git diff --staged --quiet || git commit -m "collect: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/public
+      - id: deploy
+        uses: actions/deploy-pages@v4

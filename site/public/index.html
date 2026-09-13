@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orbit Pipeline Lab</title>
+<style>
+:root { --bg:#fbfbfa; --fg:#1a1a19; --mut:#6b6b68; --line:#e4e4e1; --acc:#2f5ea8; }
+* { box-sizing:border-box; }
+body { margin:0; padding:32px 20px 64px; background:var(--bg); color:var(--fg);
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif; }
+.wrap { max-width:860px; margin:0 auto; }
+h1 { font-size:24px; margin:0 0 6px; letter-spacing:-.02em; }
+h2 { font-size:17px; margin:36px 0 12px; }
+.sub { color:var(--mut); margin:0 0 28px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px 16px; }
+.card .k { font-size:12px; color:var(--mut); }
+.card .v { font-size:26px; font-weight:600; letter-spacing:-.02em; margin:2px 0; }
+.card .s { font-size:12px; color:var(--mut); }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th,td { text-align:left; padding:7px 8px; border-bottom:1px solid var(--line); }
+th { color:var(--mut); font-weight:500; }
+.ok { color:#1f7a4d; } .warn { color:#b0631a; }
+.bar { fill:var(--acc); } .lbl { font-size:12px; fill:var(--mut); } .val { font-size:12px; fill:var(--fg); }
+.muted { color:var(--mut); }
+.note { background:#fff; border:1px solid var(--line); border-left:3px solid var(--acc);
+  border-radius:6px; padding:12px 14px; font-size:13px; }
+code { background:#f0f0ee; padding:1px 5px; border-radius:4px; font-size:12px; }
+.scroll { overflow-x:auto; }
+</style></head><body><div class="wrap">
+
+<h1>Orbit Pipeline Lab</h1>
+<p class="sub">공개 궤도 데이터(CelesTrak GP)로 재본 데이터 파이프라인의 신선도·증분 처리 실험 · 갱신 2026-09-13 02:35 UTC</p>
+
+<div class="grid"><div class='card'><div class='k'>활성 객체</div><div class='v'>16,564</div><div class='s'>CelesTrak active 그룹</div></div><div class='card'><div class='k'>TLE로 표현 불가</div><div class='v'>546</div><div class='s'>3.296% · 6자리 번호 (2026-07-11 5자리 소진)</div></div><div class='card'><div class='k'>요소 나이 중앙값</div><div class='v'>22.9h</div><div class='s'>p90 33.08h · 원천 데이터 자체의 나이</div></div><div class='card'><div class='k'>이번 주기 재계산 대상</div><div class='v'>100.0%</div><div class='s'>쌍 기준 절감 0.0%</div></div><div class='card'><div class='k'>수집 실행</div><div class='v'>1회</div><div class='s'>성공 1회</div></div><div class='card'><div class='k'>예약 대비 시작 지연</div><div class='v'>–</div><div class='s'>스케줄 실행 후 측정</div></div></div>
+
+<h2>궤도 요소의 나이 분포</h2>
+<p class="muted">각 객체의 EPOCH가 지금으로부터 얼마나 지났는지. <strong>원천 데이터 자체가 이미 하루 가까이 묵어 있다</strong>는 뜻이고,
+수집 주기를 늘리면 이 위에 지연이 더 얹힌다.</p>
+<svg viewBox='0 0 560 136' width='100%' height='136'><text x='0' y='14' class='lbl'>≤ 2시간</text><rect x='130' y='3' width='2' height='15' rx='3' class='bar'/><text x='137' y='15' class='val'>0.02%</text><text x='0' y='40' class='lbl'>≤ 6시간</text><rect x='130' y='29' width='2' height='15' rx='3' class='bar'/><text x='137' y='41' class='val'>0.75%</text><text x='0' y='66' class='lbl'>≤ 12시간</text><rect x='130' y='55' width='11' height='15' rx='3' class='bar'/><text x='146' y='67' class='val'>3.19%</text><text x='0' y='92' class='lbl'>≤ 24시간</text><rect x='130' y='81' width='231' height='15' rx='3' class='bar'/><text x='366' y='93' class='val'>61.71%</text><text x='0' y='118' class='lbl'>≤ 48시간</text><rect x='130' y='107' width='370' height='15' rx='3' class='bar'/><text x='505' y='119' class='val'>98.76%</text></svg>
+
+<h2>주기당 재계산 대상 비율</h2>
+<p class="muted">직전 스냅샷과 비교해 궤도 요소가 실제로 바뀐 객체의 비율. 낮을수록 증분 처리의 이득이 크다.</p>
+<svg viewBox='0 0 560 32' width='100%' height='32'><text x='0' y='14' class='lbl'>09-13T02:35</text><rect x='130' y='3' width='370' height='15' rx='3' class='bar'/><text x='505' y='15' class='val'>100%</text></svg>
+
+<h2>수집 실행 원장</h2>
+<div class="scroll"><table>
+<tr><th>수집 시각(UTC)</th><th>상태</th><th>HTTP</th><th>객체 수</th><th>소요(s)</th><th>예약 대비 지연(s)</th></tr>
+<tr><td>2026-09-13T02:29:09Z</td><td class='ok'>ok</td><td>200</td><td>16564</td><td>2.348</td><td>–</td></tr>
+</table></div>
+
+<h2>읽는 법과 한계</h2>
+<div class="note">
+<p><strong>이 페이지는 무엇인가</strong> — 시간 기반 일괄 처리와 데이터 기반 증분 처리의 차이를
+공개 데이터로 직접 재보기 위한 실험입니다. 정밀 충돌분석이 아니며, 스크리닝은 계산 부하를 보기 위한 단순화 버전입니다.</p>
+<p><strong>한계</strong> — ① EPOCH는 발행 시각이 아니라 궤도 상태의 기준 시각입니다.
+② CelesTrak은 2시간마다 갱신되며, 다른 데이터 제공처와 갱신 주기가 다릅니다.
+③ 원본 스냅샷은 레포에 보관하지 않습니다(용량). 재현은 <code>collect/fetch_gp.py</code>로 가능합니다.</p>
+<p><strong>데이터 이용 정책</strong> — CelesTrak 정책에 따라 갱신 주기(2시간)당 1회만 요청하고,
+200이 아닌 응답을 받으면 재시도하지 않고 직전 스냅샷으로 대체합니다.</p>
+</div>
+
+</div></body></html>

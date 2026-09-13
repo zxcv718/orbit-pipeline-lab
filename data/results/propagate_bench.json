@@ -1,0 +1,37 @@
+{
+  "measured_at": "2026-09-13T02:36:47Z",
+  "environment": {
+    "python": "3.12.12",
+    "sgp4_accelerated": true,
+    "machine": "arm64",
+    "platform": "macOS-26.6.2-arm64-arm-64bit"
+  },
+  "input": {
+    "snapshot": "gp-active-20260913T022909Z.csv",
+    "satellites": 16564,
+    "skipped": 0,
+    "window_days": 7,
+    "step_hours": 1,
+    "steps": 169
+  },
+  "full_recompute": {
+    "elapsed_s": 0.712,
+    "state_vectors": 2799316,
+    "throughput_per_s": 3933677,
+    "propagation_errors": 798,
+    "state_memory_MB_if_kept": 128.1
+  },
+  "incremental": {
+    "recompute_share_pct": 100.0,
+    "satellites": 16564,
+    "elapsed_s": 0.742,
+    "state_vectors": 2799316
+  },
+  "extrapolation_1min_step": {
+    "steps": 10081,
+    "state_vectors": 166981684,
+    "estimated_s": 42.4,
+    "estimated_memory_GB_if_kept": 7.5,
+    "note": "전파 자체보다 간격이 비용을 지배한다. 저장까지 하면 메모리가 먼저 터진다."
+  }
+}

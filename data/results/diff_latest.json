@@ -1,0 +1,25 @@
+{
+  "measured_at": "2026-09-13T02:35:11Z",
+  "snapshot": "gp-active-20260913T022909Z.csv",
+  "had_previous_index": false,
+  "objects": 16564,
+  "new": 16564,
+  "changed": 0,
+  "unchanged": 0,
+  "gone": 0,
+  "recompute": 16564,
+  "recompute_share_pct": 100.0,
+  "pairs_full": 137174766,
+  "pairs_incremental": 137174766,
+  "pairs_saved_pct": 0.0,
+  "fingerprint_fields": [
+    "EPOCH",
+    "MEAN_MOTION",
+    "ECCENTRICITY",
+    "INCLINATION",
+    "RA_OF_ASC_NODE",
+    "ARG_OF_PERICENTER",
+    "MEAN_ANOMALY",
+    "BSTAR"
+  ]
+}
