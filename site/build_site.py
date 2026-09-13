@@ -63,6 +63,56 @@ def bar_chart(values: list[tuple[str, float]], unit: str = "", width: int = 560)
     return f"<svg viewBox='0 0 {width} {h}' width='100%' height='{h}'>{''.join(rows)}</svg>"
 
 
+def experiments_html() -> str:
+    """실험 결과(있는 것만) 표로. 없으면 조용히 건너뛴다."""
+    parts = []
+
+    gap = read_json(DATA / "results" / "publish_gap.json", {}) or {}
+    runs = gap.get("runs", [])
+    if runs:
+        rows = "".join(
+            "<tr>"
+            f"<td>{r['setup']['documents']:,}</td>"
+            f"<td class='warn'>{r['as_is_full_replace']['gap_window_ms']:,.0f}ms</td>"
+            f"<td class='warn'>{r['as_is_full_replace']['incomplete_share_pct']}%</td>"
+            f"<td class='ok'>{r['to_be_versioned_swap']['gap_window_ms']:,.0f}ms</td>"
+            f"<td>{r['as_is_full_replace']['publish_s']}s / {r['to_be_versioned_swap']['publish_s']}s</td>"
+            "</tr>"
+            for r in runs
+        )
+        parts.append(
+            "<h2>E3 · 결과를 갱신하는 동안 조회하면 무엇이 보이는가</h2>"
+            "<p class='muted'>왼쪽은 통째로 지우고 다시 채우는 방식, 오른쪽은 새 버전에 다 쓴 뒤 포인터만 바꾸는 방식.</p>"
+            "<div class='scroll'><table>"
+            "<tr><th>문서 수</th><th>통째 교체 공백</th><th>깨진 조회</th><th>버전 교체 공백</th><th>게시 소요(통째/버전)</th></tr>"
+            f"{rows}</table></div>"
+        )
+
+    fail = read_json(DATA / "results" / "source_failure.json", {}) or {}
+    if fail.get("summary"):
+        s = fail["summary"]
+        parts.append(
+            "<h2>E4 · 소스가 실패할 때</h2>"
+            f"<div class='note'><p><strong>그냥 진행</strong> — {escape(s['as_is'])}</p>"
+            f"<p><strong>기록하고 표시</strong> — {escape(s['to_be'])}</p>"
+            f"<p class='muted'>403 재시도: {escape(s['retry_on_403'])}</p></div>"
+        )
+
+    bench = read_json(DATA / "results" / "propagate_bench.json", {}) or {}
+    if bench.get("full_recompute"):
+        f, e, env = bench["full_recompute"], bench["extrapolation_1min_step"], bench["environment"]
+        parts.append(
+            "<h2>전파 비용 · 병목은 전파가 아니었다</h2>"
+            f"<p class='muted'>전체 {bench['input']['satellites']:,}개를 {bench['input']['window_days']}일치 "
+            f"{bench['input']['step_hours']}시간 간격으로 전파: <strong>{f['elapsed_s']}초</strong> "
+            f"(상태벡터 {f['state_vectors']:,}개, 초당 {f['throughput_per_s']:,}회). "
+            f"샘플 간격을 1분으로 줄이면 {e['estimated_s']}초 · 저장 시 {e['estimated_memory_GB_if_kept']}GB. "
+            f"측정 환경: Python {env['python']} · C++ 가속 {env['sgp4_accelerated']} · {env['machine']}</p>"
+        )
+
+    return "".join(parts)
+
+
 def main() -> int:
     stats = read_json(DATA / "results" / "snapshot_stats.json", {}) or {}
     diff = read_json(DATA / "results" / "diff_latest.json", {}) or {}
@@ -175,6 +225,8 @@ code {{ background:#f0f0ee; padding:1px 5px; border-radius:4px; font-size:12px; 
 <h2>주기당 재계산 대상 비율</h2>
 <p class="muted">직전 스냅샷과 비교해 궤도 요소가 실제로 바뀐 객체의 비율. 낮을수록 증분 처리의 이득이 크다.</p>
 {recompute_chart}
+
+{experiments_html()}
 
 <h2>수집 실행 원장</h2>
 <div class="scroll"><table>

@@ -29,9 +29,9 @@ code { background:#f0f0ee; padding:1px 5px; border-radius:4px; font-size:12px; }
 </style></head><body><div class="wrap">
 
 <h1>Orbit Pipeline Lab</h1>
-<p class="sub">공개 궤도 데이터(CelesTrak GP)로 재본 데이터 파이프라인의 신선도·증분 처리 실험 · 갱신 2026-09-13 02:35 UTC</p>
+<p class="sub">공개 궤도 데이터(CelesTrak GP)로 재본 데이터 파이프라인의 신선도·증분 처리 실험 · 갱신 2026-09-13 02:52 UTC</p>
 
-<div class="grid"><div class='card'><div class='k'>활성 객체</div><div class='v'>16,564</div><div class='s'>CelesTrak active 그룹</div></div><div class='card'><div class='k'>TLE로 표현 불가</div><div class='v'>546</div><div class='s'>3.296% · 6자리 번호 (2026-07-11 5자리 소진)</div></div><div class='card'><div class='k'>요소 나이 중앙값</div><div class='v'>22.9h</div><div class='s'>p90 33.08h · 원천 데이터 자체의 나이</div></div><div class='card'><div class='k'>이번 주기 재계산 대상</div><div class='v'>100.0%</div><div class='s'>쌍 기준 절감 0.0%</div></div><div class='card'><div class='k'>수집 실행</div><div class='v'>1회</div><div class='s'>성공 1회</div></div><div class='card'><div class='k'>예약 대비 시작 지연</div><div class='v'>–</div><div class='s'>스케줄 실행 후 측정</div></div></div>
+<div class="grid"><div class='card'><div class='k'>활성 객체</div><div class='v'>16,564</div><div class='s'>CelesTrak active 그룹</div></div><div class='card'><div class='k'>TLE로 표현 불가</div><div class='v'>546</div><div class='s'>3.296% · 6자리 번호 (2026-07-11 5자리 소진)</div></div><div class='card'><div class='k'>요소 나이 중앙값</div><div class='v'>22.9h</div><div class='s'>p90 33.08h · 원천 데이터 자체의 나이</div></div><div class='card'><div class='k'>이번 주기 재계산 대상</div><div class='v'>100.0%</div><div class='s'>쌍 기준 절감 0.0%</div></div><div class='card'><div class='k'>수집 실행</div><div class='v'>3회</div><div class='s'>성공 1회</div></div><div class='card'><div class='k'>예약 대비 시작 지연</div><div class='v'>–</div><div class='s'>스케줄 실행 후 측정</div></div></div>
 
 <h2>궤도 요소의 나이 분포</h2>
 <p class="muted">각 객체의 EPOCH가 지금으로부터 얼마나 지났는지. <strong>원천 데이터 자체가 이미 하루 가까이 묵어 있다</strong>는 뜻이고,
@@ -42,10 +42,12 @@ code { background:#f0f0ee; padding:1px 5px; border-radius:4px; font-size:12px; }
 <p class="muted">직전 스냅샷과 비교해 궤도 요소가 실제로 바뀐 객체의 비율. 낮을수록 증분 처리의 이득이 크다.</p>
 <svg viewBox='0 0 560 32' width='100%' height='32'><text x='0' y='14' class='lbl'>09-13T02:35</text><rect x='130' y='3' width='370' height='15' rx='3' class='bar'/><text x='505' y='15' class='val'>100%</text></svg>
 
+<h2>E3 · 결과를 갱신하는 동안 조회하면 무엇이 보이는가</h2><p class='muted'>왼쪽은 통째로 지우고 다시 채우는 방식, 오른쪽은 새 버전에 다 쓴 뒤 포인터만 바꾸는 방식.</p><div class='scroll'><table><tr><th>문서 수</th><th>통째 교체 공백</th><th>깨진 조회</th><th>버전 교체 공백</th><th>게시 소요(통째/버전)</th></tr><tr><td>15,000</td><td class='warn'>76ms</td><td class='warn'>10.87%</td><td class='ok'>0ms</td><td>0.094s / 0.067s</td></tr><tr><td>60,000</td><td class='warn'>331ms</td><td class='warn'>35.85%</td><td class='ok'>0ms</td><td>0.347s / 0.19s</td></tr><tr><td>240,000</td><td class='warn'>1,372ms</td><td class='warn'>72.86%</td><td class='ok'>0ms</td><td>1.425s / 0.67s</td></tr></table></div><h2>E4 · 소스가 실패할 때</h2><div class='note'><p><strong>그냥 진행</strong> — 3개 주기 동안 최대 6.0시간 낡은 데이터를 제공했고, 그 사실을 알리는 신호는 없었다</p><p><strong>기록하고 표시</strong> — 같은 상황에서 2번 경보가 발생했고, 응답에는 매번 기준 시각이 붙었다</p><p class='muted'>403 재시도: 없음 — 데이터 제공처 정책(non-200 시 즉시 중단)을 코드가 강제한다</p></div><h2>전파 비용 · 병목은 전파가 아니었다</h2><p class='muted'>전체 16,564개를 7일치 1시간 간격으로 전파: <strong>0.712초</strong> (상태벡터 2,799,316개, 초당 3,933,677회). 샘플 간격을 1분으로 줄이면 42.4초 · 저장 시 7.5GB. 측정 환경: Python 3.12.12 · C++ 가속 True · arm64</p>
+
 <h2>수집 실행 원장</h2>
 <div class="scroll"><table>
 <tr><th>수집 시각(UTC)</th><th>상태</th><th>HTTP</th><th>객체 수</th><th>소요(s)</th><th>예약 대비 지연(s)</th></tr>
-<tr><td>2026-09-13T02:29:09Z</td><td class='ok'>ok</td><td>200</td><td>16564</td><td>2.348</td><td>–</td></tr>
+<tr><td>2026-09-13T02:52:02Z</td><td class='warn'>skipped</td><td>–</td><td>–</td><td>–</td><td>–</td></tr><tr><td>2026-09-13T02:38:40Z</td><td class='warn'>skipped</td><td>–</td><td>–</td><td>–</td><td>–</td></tr><tr><td>2026-09-13T02:29:09Z</td><td class='ok'>ok</td><td>200</td><td>16564</td><td>2.348</td><td>–</td></tr>
 </table></div>
 
 <h2>읽는 법과 한계</h2>

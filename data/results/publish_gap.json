@@ -1,29 +1,91 @@
 {
-  "measured_at": "2026-09-13T02:47:54Z",
-  "setup": {
-    "documents": 60000,
-    "batch": 5000,
-    "poll_interval_ms": 10.0,
-    "mongodb": "8.2.4",
-    "note": "조회하는 쪽은 게시가 도는 동안 계속 결과 건수를 센다"
-  },
-  "as_is_full_replace": {
-    "publish_s": 0.344,
-    "polls": 53,
-    "empty": 1,
-    "partial": 18,
-    "complete": 34,
-    "incomplete_share_pct": 35.85,
-    "gap_window_ms": 318.3
-  },
-  "to_be_versioned_swap": {
-    "publish_s": 0.178,
-    "polls": 40,
-    "empty": 0,
-    "partial": 0,
-    "complete": 40,
-    "incomplete_share_pct": 0.0,
-    "gap_window_ms": 0.0
-  },
-  "headline": "통째 교체는 318ms 동안 조회 결과가 비거나 불완전했고, 버전 교체는 0.0%였다"
+  "runs": [
+    {
+      "measured_at": "2026-09-13T02:50:09Z",
+      "setup": {
+        "documents": 15000,
+        "batch": 5000,
+        "poll_interval_ms": 10.0,
+        "mongodb": "8.2.4",
+        "note": "조회하는 쪽은 게시가 도는 동안 계속 결과 건수를 센다"
+      },
+      "as_is_full_replace": {
+        "publish_s": 0.094,
+        "polls": 46,
+        "empty": 1,
+        "partial": 4,
+        "complete": 41,
+        "incomplete_share_pct": 10.87,
+        "gap_window_ms": 76.0
+      },
+      "to_be_versioned_swap": {
+        "publish_s": 0.067,
+        "polls": 47,
+        "empty": 0,
+        "partial": 0,
+        "complete": 47,
+        "incomplete_share_pct": 0.0,
+        "gap_window_ms": 0.0
+      },
+      "headline": "통째 교체는 76ms 동안 조회 결과가 비거나 불완전했고, 버전 교체는 0.0%였다"
+    },
+    {
+      "measured_at": "2026-09-13T02:50:12Z",
+      "setup": {
+        "documents": 60000,
+        "batch": 5000,
+        "poll_interval_ms": 10.0,
+        "mongodb": "8.2.4",
+        "note": "조회하는 쪽은 게시가 도는 동안 계속 결과 건수를 센다"
+      },
+      "as_is_full_replace": {
+        "publish_s": 0.347,
+        "polls": 53,
+        "empty": 1,
+        "partial": 18,
+        "complete": 34,
+        "incomplete_share_pct": 35.85,
+        "gap_window_ms": 330.9
+      },
+      "to_be_versioned_swap": {
+        "publish_s": 0.19,
+        "polls": 42,
+        "empty": 0,
+        "partial": 0,
+        "complete": 42,
+        "incomplete_share_pct": 0.0,
+        "gap_window_ms": 0.0
+      },
+      "headline": "통째 교체는 331ms 동안 조회 결과가 비거나 불완전했고, 버전 교체는 0.0%였다"
+    },
+    {
+      "measured_at": "2026-09-13T02:50:14Z",
+      "setup": {
+        "documents": 240000,
+        "batch": 5000,
+        "poll_interval_ms": 10.0,
+        "mongodb": "8.2.4",
+        "note": "조회하는 쪽은 게시가 도는 동안 계속 결과 건수를 센다"
+      },
+      "as_is_full_replace": {
+        "publish_s": 1.425,
+        "polls": 70,
+        "empty": 1,
+        "partial": 50,
+        "complete": 19,
+        "incomplete_share_pct": 72.86,
+        "gap_window_ms": 1372.1
+      },
+      "to_be_versioned_swap": {
+        "publish_s": 0.67,
+        "polls": 35,
+        "empty": 0,
+        "partial": 0,
+        "complete": 35,
+        "incomplete_share_pct": 0.0,
+        "gap_window_ms": 0.0
+      },
+      "headline": "통째 교체는 1372ms 동안 조회 결과가 비거나 불완전했고, 버전 교체는 0.0%였다"
+    }
+  ]
 }
