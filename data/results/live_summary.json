@@ -1,0 +1,61 @@
+{
+  "measured_at": "2026-09-14T00:30:13Z",
+  "schedule_reliability": {
+    "window": {
+      "from": "2026-09-13T08:17:00Z",
+      "to": "2026-09-13T22:17:00Z"
+    },
+    "expected_hourly_slots": 15,
+    "actual_runs": 5,
+    "execution_rate_pct": 33.3,
+    "missing_slots": 10,
+    "start_delay_minutes": {
+      "min": 4.4,
+      "median": 32.2,
+      "mean": 27.0,
+      "max": 54.4
+    },
+    "caveat": "GitHub Actions 무료 스케줄러 관측값. 운영 스케줄러와 동일하다고 주장하지 않음. 지연이 1시간을 넘으면 슬롯 귀속이 모호하므로 지연은 최솟값으로 해석."
+  },
+  "change_pattern": {
+    "cycles": [
+      {
+        "at": "2026-09-13T08:21:26Z",
+        "hours_since_previous": 5.8,
+        "recompute_pct": 92.13,
+        "pairs_saved_pct": 0.62
+      },
+      {
+        "at": "2026-09-13T13:49:11Z",
+        "hours_since_previous": 5.5,
+        "recompute_pct": 76.22,
+        "pairs_saved_pct": 5.65
+      },
+      {
+        "at": "2026-09-13T17:25:25Z",
+        "hours_since_previous": 3.6,
+        "recompute_pct": 0.11,
+        "pairs_saved_pct": 99.77
+      },
+      {
+        "at": "2026-09-13T20:52:40Z",
+        "hours_since_previous": 3.5,
+        "recompute_pct": 81.72,
+        "pairs_saved_pct": 3.34
+      },
+      {
+        "at": "2026-09-13T23:11:26Z",
+        "hours_since_previous": 2.3,
+        "recompute_pct": 0.05,
+        "pairs_saved_pct": 99.9
+      }
+    ],
+    "quiet_cycles": 2,
+    "burst_cycles": 3,
+    "other_cycles": 0,
+    "quiet_share_pct": 40.0,
+    "pairs_saved_in_quiet_pct": 99.84,
+    "recompute_in_burst_pct": 83.4,
+    "reading": "변경은 연속적이지 않고 두 갈래로 갈린다. 증분의 이득은 대부분 '바뀐 일부만 계산'이 아니라 '안 바뀐 주기를 통째로 건너뛰기'에서 나온다."
+  }
+}

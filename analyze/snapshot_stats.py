@@ -128,6 +128,17 @@ def main() -> int:
     out = OUT_DIR / "snapshot_stats.json"
     out.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
 
+    # 최신값만 남기면 측정 시점에 따른 변동이 사라진다(실제로 13~23시간을 오갔다).
+    # 그래서 매 실행을 이력으로도 쌓는다. 같은 스냅샷을 두 번 재면 한 번만 남긴다.
+    history = OUT_DIR / "stats_history.jsonl"
+    seen = set()
+    if history.exists():
+        seen = {json.loads(l).get("snapshot") for l in history.read_text(encoding="utf-8").splitlines() if l.strip()}
+    if path.name not in seen:
+        compact = {k: result[k] for k in ("measured_at", "objects_total", "e6_schema_risk", "e1_epoch_age_hours")}
+        with history.open("a", encoding="utf-8") as f:
+            f.write(json.dumps({"snapshot": path.name, **compact}, ensure_ascii=False) + "\n")
+
     print(json.dumps(result, ensure_ascii=False, indent=2))
     print(f"\n저장: {out.relative_to(ROOT)}")
     return 0
