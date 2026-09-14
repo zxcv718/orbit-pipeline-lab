@@ -39,9 +39,9 @@ jobs:
           python - <<'PY' >> "$GITHUB_ENV"
           import datetime as d
           n = d.datetime.now(d.timezone.utc)
-          slot = n.replace(hour=n.hour - (n.hour % 2), minute=17, second=0, microsecond=0)
+          slot = n.replace(minute=17, second=0, microsecond=0)
           if slot > n:
-              slot -= d.timedelta(hours=2)
+              slot -= d.timedelta(hours=1)
           print(f"SCHEDULED_AT={slot.strftime('%Y-%m-%dT%H:%M:%SZ')}")
           PY
 

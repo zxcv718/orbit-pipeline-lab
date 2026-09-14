@@ -7,3 +7,6 @@ __pycache__/
 *.pyc
 .venv/
 .DS_Store
+
+# 작업 도구 상태 파일 (레포 내용과 무관)
+.omc/
