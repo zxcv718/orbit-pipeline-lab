@@ -118,7 +118,7 @@ def summarize(samples: list[tuple[float, int]], expected: int) -> dict:
 
 
 def run_as_is(db, docs: list[dict]) -> dict:
-    """통째 교체: 지우고 다시 채운다."""
+    """전체 교체: 기존 결과를 지우고 다시 채운다."""
     db["results"].drop()
     db["results"].insert_many(make_docs("v0", [d["primary"] for d in docs[:100]]))  # 기존 버전
     reader = Reader(db, "as-is")
@@ -190,8 +190,8 @@ def main() -> int:
 
     gap = result["as_is_full_replace"]["gap_window_ms"]
     result["headline"] = (
-        f"통째 교체는 {gap:.0f}ms 동안 조회 결과가 비거나 불완전했고, "
-        f"버전 교체는 {result['to_be_versioned_swap']['incomplete_share_pct']}%였다"
+        f"전체 교체는 {gap:.0f}ms 동안 조회 결과가 비거나 불완전했고, "
+        f"버전 교체의 불완전 조회 비율은 {result['to_be_versioned_swap']['incomplete_share_pct']}%"
     )
 
     # 규모별로 여러 번 돌린 결과를 한 파일에 쌓는다 (비례 관계를 보기 위함)
