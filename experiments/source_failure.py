@@ -1,19 +1,14 @@
 #!/usr/bin/env python3
-"""E4 — 외부 소스가 실패하면 무슨 일이 벌어지는가.
+"""데이터 소스 장애 시 두 방식의 동작을 비교한다.
 
-시뮬레이션이 아니라 실제 주입이다. 로컬에 가짜 데이터 소스를 띄우고
-200 / 403 / 타임아웃을 순서대로 내보낸 뒤, 실제 수집 코드를 그대로 돌린다.
+로컬에 모의 데이터 소스를 띄워 200, 403, 타임아웃 응답을 차례로 반환하고,
+실제 수집 코드(collect/fetch_gp.py)를 그대로 실행한다.
 
-두 정책을 비교한다.
+  as-is : 수집에 실패해도 직전 데이터로 계속 처리하고, 결과에 아무 표시도 하지 않는다.
+  to-be : 재시도하지 않고 직전 스냅샷을 사용하되, 결과에 기준 시각을 붙이고
+          경과 시간이 기준을 넘으면 경보를 낸다.
 
-  (as-is) 실패해도 그냥 진행 : 응답이 없으면 직전 데이터로 계속 계산하고,
-                               결과에는 아무 표시도 남기지 않는다.
-                               → 낡은 데이터가 '최신'인 얼굴로 제공된다.
-  (to-be) 실패를 기록하고 표시: 재시도하지 않고(정책), 직전 스냅샷으로 대체하되
-                               결과에 기준 시각을 붙이고, 기준을 넘으면 경보한다.
-                               → 낡았다는 사실이 드러난다.
-
-측정: 각 주기마다 '제공된 데이터의 나이'와 '그 사실을 알 수 있었는가'.
+주기마다 제공된 데이터의 경과 시간과, 사용자가 이를 알 수 있었는지를 기록한다.
 
 실행: uv run --no-project --python 3.12 python experiments/source_failure.py
 """
@@ -36,7 +31,7 @@ TMP = ROOT / "data" / "tmp_e4"
 PORT = 8765
 # 주기별 소스 상태: 200 → 403(정책상 재시도 금지) → 타임아웃 → 복구
 PATTERN = [200, 200, 403, 403, 599, 200]
-FRESHNESS_SLO_HOURS = 3.0  # 이보다 낡으면 경보
+FRESHNESS_SLO_HOURS = 3.0  # 경과 시간이 이 값을 넘으면 경보
 
 
 class FakeSource(BaseHTTPRequestHandler):
@@ -46,7 +41,7 @@ class FakeSource(BaseHTTPRequestHandler):
 
     def do_GET(self):  # noqa: N802
         status = PATTERN[min(FakeSource.cycle, len(PATTERN) - 1)]
-        if status == 599:  # 타임아웃 흉내
+        if status == 599:  # 응답을 지연시켜 타임아웃 재현
             threading.Event().wait(3)
             return
         if status != 200:
@@ -60,12 +55,12 @@ class FakeSource(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def log_message(self, format, *args):  # noqa: A002 — 조용히
+    def log_message(self, format, *args):  # noqa: A002  요청 로그 출력 생략
         pass
 
 
 def load_fetch_module():
-    """실제 수집 코드를 그대로 불러온다 (복사본이 아니라 같은 파일)."""
+    """collect/fetch_gp.py를 그대로 불러온다."""
     spec = importlib.util.spec_from_file_location("fetch_gp", ROOT / "collect" / "fetch_gp.py")
     if spec is None or spec.loader is None:
         sys.exit("collect/fetch_gp.py 를 불러올 수 없습니다.")
@@ -115,7 +110,7 @@ def main() -> int:
                 "fetch_result": rec.get("status"),
                 "http": rec.get("http_status"),
                 "served_data_age_h": None if age_h is None else round(age_h, 1),
-                # as-is: 표시도 경보도 없다. 사용자는 낡았다는 걸 알 방법이 없다.
+                # as-is: 기준 시각 표시와 경보가 없어 사용자가 데이터 경과 시간을 알 수 없다.
                 "as_is_marked": False,
                 "as_is_alert": False,
                 # to-be: 응답에 기준 시각을 붙이고, SLO를 넘으면 경보한다.
@@ -138,15 +133,15 @@ def main() -> int:
             "pattern": PATTERN,
             "cycle_hours": 2,
             "freshness_slo_hours": FRESHNESS_SLO_HOURS,
-            "note": "로컬 가짜 소스에 실제 수집 코드를 붙여 돌렸다. 로직은 운영과 같은 파일이다.",
+            "note": "로컬 모의 소스에 실제 수집 코드(collect/fetch_gp.py)를 연결해 실행",
         },
         "timeline": timeline,
         "summary": {
             "stale_cycles": len(stale_cycles),
             "max_served_age_h": max_age,
-            "as_is": f"{len(stale_cycles)}개 주기 동안 최대 {max_age}시간 낡은 데이터를 제공했고, 그 사실을 알리는 신호는 없었다",
-            "to_be": f"같은 상황에서 {len(alerts)}번 경보가 발생했고, 응답에는 매번 기준 시각이 붙었다",
-            "retry_on_403": "없음 — 데이터 제공처 정책(non-200 시 즉시 중단)을 코드가 강제한다",
+            "as_is": f"{len(stale_cycles)}개 주기 동안 최대 {max_age}시간 지난 데이터 제공, 알림 신호 없음",
+            "to_be": f"같은 상황에서 경보 {len(alerts)}회, 모든 응답에 기준 시각 포함",
+            "retry_on_403": "재시도 없음 (200이 아닌 응답 시 요청을 중단하는 제공처 정책)",
         },
     }
 

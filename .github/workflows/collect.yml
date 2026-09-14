@@ -1,11 +1,10 @@
 name: collect
 
-# 매시 깨어나, 정책 게이트가 허용할 때(2시간 갱신당 1회)만 공개 궤도 데이터를 받아 변경분을 재고, 결과를 정적 페이지로 배포한다.
-# - CelesTrak GP는 2시간마다 갱신되고 "갱신당 1회"만 받도록 정해져 있다.
-# - 분(minute)을 17로 둔 이유: 정각은 GitHub Actions 부하가 몰려 지연이 크고,
-#   데이터 제공처에도 요청이 몰리는 시각이다. (Space-Track도 정각·30분을 피하라고 권고한다)
-# 매시 폴링하되, 실제 요청 여부는 스크립트의 정책 게이트가 정한다.
-# (Space-Track이 GP를 "시간당 1회"까지 허용하는 것과 같은 모양 — 폴링 주기와 요청 주기를 분리한다)
+# 매시 실행한다. 수집 스크립트가 CelesTrak 이용 정책(2시간 갱신당 1회)을 확인해 실제 요청 여부를 정하고,
+# 통계, 변경 비교 결과, 정적 대시보드를 커밋하고 배포한다.
+# - 17분에 실행하는 이유: 정각에는 GitHub Actions 예약 실행이 몰려 지연이 커지고,
+#   데이터 제공처에도 요청이 몰린다. Space-Track도 정각과 30분을 피하도록 권고한다.
+# - 실행 주기(매시)와 실제 요청 주기(2시간당 1회)를 분리한다.
 on:
   schedule:
     - cron: "17 * * * *"
@@ -49,10 +48,10 @@ jobs:
         run: python collect/fetch_gp.py
 
       - name: 스냅샷 통계
-        run: python analyze/snapshot_stats.py || echo "스냅샷 없음 — 직전 결과 유지"
+        run: python analyze/snapshot_stats.py || echo "스냅샷 없음, 직전 결과 유지"
 
       - name: 변경 감지
-        run: python analyze/diff_snapshots.py || echo "스냅샷 없음 — 직전 결과 유지"
+        run: python analyze/diff_snapshots.py || echo "스냅샷 없음, 직전 결과 유지"
 
       - name: 정적 페이지 생성
         run: python site/build_site.py

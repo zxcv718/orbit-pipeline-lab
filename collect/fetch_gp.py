@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""CelesTrak GP 스냅샷 수집기 — 이용 정책을 지키는 것이 이 스크립트의 절반이다.
+"""CelesTrak GP 스냅샷 수집기. 이용 정책에 맞춰 요청 간격과 실패 처리를 제한한다.
 
 정책 근거 (https://celestrak.org/usage-policy.php , 2026-09-11 확인):
   - GP 데이터는 2시간마다 갱신되고 "only download data once per update".
-  - non-HTTP 200 응답을 받으면 "should immediately stop querying" → 재시도 금지.
-  - 하루 100MB 초과 금지 → CSV 포맷 사용 (JSON 대비 작음).
-  - celestrak.com은 301이므로 .org만 사용.
+  - HTTP 200이 아닌 응답을 받으면 "should immediately stop querying". 재시도하지 않는다.
+  - 하루 100MB를 넘기지 않도록 JSON보다 작은 CSV 형식을 사용한다.
+  - celestrak.com은 301로 이동하므로 .org만 사용한다.
 
-설계 의도:
-  - 이 스크립트는 '수집' 한 단계만 한다. 실패해도 파이프라인 전체를 세우지 않는다.
-  - 실패는 예외가 아니라 기록이다. manifest.jsonl 한 줄로 남고, 하류는 직전 스냅샷을 쓴다.
-  - 모든 실행은 성공/건너뜀/실패 관계없이 원장(manifest)에 남는다 = 관측성의 출발점.
+동작:
+  - 수집 한 단계만 수행하고, 실패해도 예외로 종료하지 않는다.
+  - 성공, 건너뜀, 실패 모두 data/manifest.jsonl에 한 줄씩 기록한다.
+    실패한 주기에는 후속 처리가 직전 스냅샷을 사용한다.
 
 사용법:
   python3 poc/collect/fetch_gp.py            # 정책상 받을 때가 됐으면 받는다
@@ -32,13 +32,13 @@ from pathlib import Path
 
 GROUP = "active"
 URL = f"https://celestrak.org/NORAD/elements/gp.php?GROUP={GROUP}&FORMAT=CSV"
-USER_AGENT = "spacemap-pipeline-lab/0.1 (job assignment PoC; https://github.com/zxcv718)"
+USER_AGENT = "orbit-pipeline-lab/0.1 (+https://github.com/zxcv718/orbit-pipeline-lab)"
 
 # CelesTrak GP 갱신 주기는 2시간. 갱신당 1회만 받는다.
 MIN_INTERVAL = timedelta(hours=2)
 
 # 이 파일은 <repo>/collect/fetch_gp.py 위치에 있다.
-# 로컬에서는 spacemap/poc/ 가, 공개 레포에서는 레포 루트가 ROOT가 된다 (같은 코드가 양쪽에서 돈다).
+# 작업 폴더에서는 poc/ 디렉터리가, 공개 저장소에서는 저장소 루트가 ROOT가 된다.
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 SNAP_DIR = DATA / "snapshots"
@@ -111,7 +111,7 @@ def main() -> int:
             "scheduled_at": scheduled_at,
             "status": "http_error",
             "http_status": e.code,
-            "note": "정책상 재시도하지 않음. 하류는 직전 스냅샷 사용.",
+            "note": "정책상 재시도하지 않음. 후속 처리는 직전 스냅샷 사용.",
         }
         append_manifest(rec)
         print(json.dumps(rec, ensure_ascii=False))

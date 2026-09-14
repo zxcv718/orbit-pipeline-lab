@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
-"""스냅샷 1개로 낼 수 있는 근거 두 가지.
+"""최신 스냅샷 1개로 두 가지 통계를 계산한다.
 
-E6 — 스키마 위험:
-  2026-07-11에 TLE 5자리 카탈로그 번호가 소진됐다(CelesTrak).
-  100000번 이상 객체는 TLE 형식으로 제공되지 않으므로, TLE만 파싱하는 수집 잡은
-  이 객체들을 '오류 없이' 놓친다. 지금 데이터에 몇 개나 있는지 센다.
+1. 6자리 카탈로그 번호 객체 수
+   2026-07-11에 TLE 5자리 카탈로그 번호가 소진되었고(CelesTrak), 100000번 이상 객체는
+   TLE 형식으로 제공되지 않는다. TLE만 파싱하는 수집기는 이 객체를 오류 없이 누락하므로 개수를 센다.
 
-E1(1차) — 신선도:
-  각 객체의 EPOCH(궤도 요소의 기준 시각)가 지금으로부터 얼마나 오래됐는지 분포를 낸다.
-  이 분포는 "소스가 얼마나 자주 갱신되는가"의 하한선을 보여준다.
-  스냅샷이 여러 개 쌓이면 '주기당 실제 변경 비율'로 정밀화한다(E2).
+2. 궤도 요소 경과 시간 분포
+   각 객체의 EPOCH부터 측정 시점까지 지난 시간의 분포를 계산한다.
+   공개 GP 데이터에는 등재 시각이 없어 원천 지연과 재배포 지연이 합쳐진 값이다.
 
-주의(문서에 반드시 병기할 한계):
-  - EPOCH는 '발행 시각'이 아니라 '궤도 상태의 기준 시각'이다.
-  - CelesTrak은 스페이스맵이 쓰는 Space-Track의 대체 공개 소스이며 갱신 주기가 다르다.
+한계:
+  - EPOCH는 게시 시각이 아니라 궤도를 결정한 기준 시각이다.
+  - CelesTrak은 Space-Track 데이터를 재배포하는 공개 소스이며 갱신 주기가 다르다.
 """
 
 from __future__ import annotations
@@ -61,7 +59,7 @@ def main() -> int:
 
     ages_h: list[float] = []
     total = 0
-    over_5digit = 0      # TLE로 표현 불가 (E6의 핵심 수치)
+    over_5digit = 0      # TLE 5자리로 표현할 수 없는 객체 수
     over_sgp4_limit = 0  # sgp4 라이브러리도 거부
     no_epoch = 0
 
@@ -105,7 +103,7 @@ def main() -> int:
             "norad_over_99999": over_5digit,
             "share_pct": round(100.0 * over_5digit / total, 3) if total else 0,
             "norad_over_sgp4_limit_339999": over_sgp4_limit,
-            "meaning": "TLE 형식만 파싱하는 수집 잡이 조용히 놓치는 객체 수",
+            "meaning": "TLE 형식만 파싱하는 수집기가 오류 없이 누락하는 객체 수",
         },
         "e1_epoch_age_hours": {
             "count": len(ages_h),

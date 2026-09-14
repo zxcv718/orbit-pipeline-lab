@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""실제로 돌려서 쌓인 기록에서 두 가지를 읽는다.
+"""누적된 수집 기록에서 두 가지를 요약한다.
 
-1. 스케줄 신뢰성 — 시간 기반 트리거는 예약대로 실행되는가
-   - 기대한 실행 횟수(매시 슬롯 수) 대비 실제 실행 횟수
-   - 실행된 것의 예약 시각 대비 지연
-   주의: GitHub Actions 무료 스케줄러의 값이다. 운영 Airflow와 같다고 주장하지 않는다.
-   말하려는 것은 "예약 시각 = 실행 시각"이라는 가정이 깨질 수 있다는 사실 하나다.
+1. 예약 실행 기록
+   - 매시 예약 횟수 대비 실제 실행 횟수
+   - 실행된 경우 예약 시각 대비 시작 지연
+   GitHub Actions 무료 스케줄러의 관측값이므로 Airflow 운영 환경에 그대로 적용하지 않는다.
 
-2. 변경 패턴 — 주기마다 실제로 얼마나 바뀌는가
-   - 소스가 대량 갱신한 주기와 조용한 주기로 갈리는지
-   - 조용한 주기를 건너뛰면 얼마나 아끼는지
+2. 주기별 변경 패턴
+   - 대량 갱신이 들어온 주기와 변경이 거의 없는 주기의 비율
+   - 변경이 거의 없는 주기를 건너뛰었을 때 줄일 수 있는 계산량
 
 실행: python3 analyze/live_summary.py
 """
@@ -27,7 +26,7 @@ DIFFS = ROOT / "data" / "results" / "diff_history.jsonl"
 OUT = ROOT / "data" / "results" / "live_summary.json"
 
 CRON_MINUTE = 17          # collect.yml 의 "17 * * * *"
-QUIET_MAX_PCT = 1.0       # 이 이하로 바뀐 주기 = 조용한 주기
+QUIET_MAX_PCT = 1.0       # 변경률이 이 값 이하인 주기를 변경이 거의 없는 주기로 분류
 BURST_MIN_PCT = 50.0      # 이 이상 바뀐 주기 = 대량 갱신 주기
 FMT = "%Y-%m-%dT%H:%M:%SZ"
 
@@ -109,8 +108,8 @@ def change_pattern(diffs: list[dict]) -> dict:
         "quiet_share_pct": round(100.0 * len(quiet) / len(rows), 1),
         "pairs_saved_in_quiet_pct": round(statistics.fmean(r["pairs_saved_pct"] for r in quiet), 2) if quiet else None,
         "recompute_in_burst_pct": round(statistics.fmean(r["recompute_pct"] for r in burst), 1) if burst else None,
-        "reading": "변경은 연속적이지 않고 두 갈래로 갈린다. 증분의 이득은 대부분 "
-        "'바뀐 일부만 계산'이 아니라 '안 바뀐 주기를 통째로 건너뛰기'에서 나온다.",
+        "reading": "변경은 대량 갱신 주기와 변경이 거의 없는 주기로 나뉜다. "
+        "증분 처리의 이득은 대부분 변경이 없는 주기를 건너뛰는 데서 나온다.",
     }
 
 

@@ -24,41 +24,44 @@ th { color:var(--mut); font-weight:500; }
 .muted { color:var(--mut); }
 .note { background:#fff; border:1px solid var(--line); border-left:3px solid var(--acc);
   border-radius:6px; padding:12px 14px; font-size:13px; }
+.note p { margin:0 0 10px; } .note p:last-child { margin-bottom:0; }
 code { background:#f0f0ee; padding:1px 5px; border-radius:4px; font-size:12px; }
 .scroll { overflow-x:auto; }
 </style></head><body><div class="wrap">
 
 <h1>Orbit Pipeline Lab</h1>
-<p class="sub">공개 궤도 데이터(CelesTrak GP)로 재본 데이터 파이프라인의 신선도·증분 처리 실험 · 갱신 2026-09-13 02:52 UTC</p>
+<p class="sub">공개 궤도 데이터(CelesTrak GP)로 측정한 데이터 파이프라인 실험 결과입니다. 마지막 갱신 2026-09-14 03:59 UTC</p>
 
-<div class="grid"><div class='card'><div class='k'>활성 객체</div><div class='v'>16,564</div><div class='s'>CelesTrak active 그룹</div></div><div class='card'><div class='k'>TLE로 표현 불가</div><div class='v'>546</div><div class='s'>3.296% · 6자리 번호 (2026-07-11 5자리 소진)</div></div><div class='card'><div class='k'>요소 나이 중앙값</div><div class='v'>22.9h</div><div class='s'>p90 33.08h · 원천 데이터 자체의 나이</div></div><div class='card'><div class='k'>이번 주기 재계산 대상</div><div class='v'>100.0%</div><div class='s'>쌍 기준 절감 0.0%</div></div><div class='card'><div class='k'>수집 실행</div><div class='v'>3회</div><div class='s'>성공 1회</div></div><div class='card'><div class='k'>예약 대비 시작 지연</div><div class='v'>–</div><div class='s'>스케줄 실행 후 측정</div></div></div>
+<div class="grid"><div class='card'><div class='k'>활성 객체</div><div class='v'>16,563</div><div class='s'>CelesTrak active 그룹, 최근 수집 기준</div></div><div class='card'><div class='k'>TLE로 받을 수 없는 객체</div><div class='v'>546</div><div class='s'>3.3%, 6자리 카탈로그 번호 객체</div></div><div class='card'><div class='k'>궤도 요소 경과 시간 중앙값</div><div class='v'>13.09시간</div><div class='s'>p90 22.69시간, 원천과 재배포 지연 합산</div></div><div class='card'><div class='k'>직전 수집 대비 변경 객체</div><div class='v'>0.05%</div><div class='s'>재계산 대상 8개</div></div><div class='card'><div class='k'>수집 실행</div><div class='v'>9회</div><div class='s'>성공 6회, 수집 간격 정책으로 건너뜀 3회</div></div><div class='card'><div class='k'>예약 대비 시작 지연</div><div class='v'>32분</div><div class='s'>중앙값, 최대 54분 (실행 5회)</div></div></div>
 
-<h2>궤도 요소의 나이 분포</h2>
-<p class="muted">각 객체의 EPOCH가 지금으로부터 얼마나 지났는지. <strong>원천 데이터 자체가 이미 하루 가까이 묵어 있다</strong>는 뜻이고,
-수집 주기를 늘리면 이 위에 지연이 더 얹힌다.</p>
-<svg viewBox='0 0 560 136' width='100%' height='136'><text x='0' y='14' class='lbl'>≤ 2시간</text><rect x='130' y='3' width='2' height='15' rx='3' class='bar'/><text x='137' y='15' class='val'>0.02%</text><text x='0' y='40' class='lbl'>≤ 6시간</text><rect x='130' y='29' width='2' height='15' rx='3' class='bar'/><text x='137' y='41' class='val'>0.75%</text><text x='0' y='66' class='lbl'>≤ 12시간</text><rect x='130' y='55' width='11' height='15' rx='3' class='bar'/><text x='146' y='67' class='val'>3.19%</text><text x='0' y='92' class='lbl'>≤ 24시간</text><rect x='130' y='81' width='231' height='15' rx='3' class='bar'/><text x='366' y='93' class='val'>61.71%</text><text x='0' y='118' class='lbl'>≤ 48시간</text><rect x='130' y='107' width='370' height='15' rx='3' class='bar'/><text x='505' y='119' class='val'>98.76%</text></svg>
+<h2>궤도 요소 경과 시간 분포</h2>
+<p class="muted">각 객체의 EPOCH(궤도 결정 시각)부터 수집 시점까지 지난 시간입니다.
+공개 GP 데이터에는 카탈로그 등재 시각이 없어 원천 지연과 재배포 지연이 합쳐진 값입니다.</p>
+<svg viewBox='0 0 560 136' width='100%' height='136'><text x='0' y='14' class='lbl'>2시간 이내</text><rect x='130' y='3' width='2' height='15' rx='3' class='bar'/><text x='137' y='15' class='val'>0.02%</text><text x='0' y='40' class='lbl'>6시간 이내</text><rect x='130' y='29' width='2' height='15' rx='3' class='bar'/><text x='137' y='41' class='val'>0.28%</text><text x='0' y='66' class='lbl'>12시간 이내</text><rect x='130' y='55' width='159' height='15' rx='3' class='bar'/><text x='294' y='67' class='val'>42.81%</text><text x='0' y='92' class='lbl'>24시간 이내</text><rect x='130' y='81' width='344' height='15' rx='3' class='bar'/><text x='479' y='93' class='val'>92.37%</text><text x='0' y='118' class='lbl'>48시간 이내</text><rect x='130' y='107' width='370' height='15' rx='3' class='bar'/><text x='505' y='119' class='val'>99.18%</text></svg>
 
-<h2>주기당 재계산 대상 비율</h2>
-<p class="muted">직전 스냅샷과 비교해 궤도 요소가 실제로 바뀐 객체의 비율. 낮을수록 증분 처리의 이득이 크다.</p>
-<svg viewBox='0 0 560 32' width='100%' height='32'><text x='0' y='14' class='lbl'>09-13T02:35</text><rect x='130' y='3' width='370' height='15' rx='3' class='bar'/><text x='505' y='15' class='val'>100%</text></svg>
+<h2>수집 주기별 변경 비율 (UTC)</h2>
+<p class="muted">직전 수집 대비 궤도 요소가 바뀐 객체의 비율입니다. 비율이 낮은 주기일수록 변경분만 계산해 줄일 수 있는 작업이 많습니다.</p>
+<svg viewBox='0 0 560 136' width='100%' height='136'><text x='0' y='14' class='lbl'>09-13 08:21</text><rect x='130' y='3' width='370' height='15' rx='3' class='bar'/><text x='505' y='15' class='val'>92.13%</text><text x='0' y='40' class='lbl'>09-13 13:49</text><rect x='130' y='29' width='306' height='15' rx='3' class='bar'/><text x='441' y='41' class='val'>76.22%</text><text x='0' y='66' class='lbl'>09-13 17:25</text><rect x='130' y='55' width='2' height='15' rx='3' class='bar'/><text x='137' y='67' class='val'>0.11%</text><text x='0' y='92' class='lbl'>09-13 20:52</text><rect x='130' y='81' width='328' height='15' rx='3' class='bar'/><text x='463' y='93' class='val'>81.72%</text><text x='0' y='118' class='lbl'>09-13 23:11</text><rect x='130' y='107' width='2' height='15' rx='3' class='bar'/><text x='137' y='119' class='val'>0.05%</text></svg>
 
-<h2>E3 · 결과를 갱신하는 동안 조회하면 무엇이 보이는가</h2><p class='muted'>왼쪽은 통째로 지우고 다시 채우는 방식, 오른쪽은 새 버전에 다 쓴 뒤 포인터만 바꾸는 방식.</p><div class='scroll'><table><tr><th>문서 수</th><th>통째 교체 공백</th><th>깨진 조회</th><th>버전 교체 공백</th><th>게시 소요(통째/버전)</th></tr><tr><td>15,000</td><td class='warn'>76ms</td><td class='warn'>10.87%</td><td class='ok'>0ms</td><td>0.094s / 0.067s</td></tr><tr><td>60,000</td><td class='warn'>331ms</td><td class='warn'>35.85%</td><td class='ok'>0ms</td><td>0.347s / 0.19s</td></tr><tr><td>240,000</td><td class='warn'>1,372ms</td><td class='warn'>72.86%</td><td class='ok'>0ms</td><td>1.425s / 0.67s</td></tr></table></div><h2>E4 · 소스가 실패할 때</h2><div class='note'><p><strong>그냥 진행</strong> — 3개 주기 동안 최대 6.0시간 낡은 데이터를 제공했고, 그 사실을 알리는 신호는 없었다</p><p><strong>기록하고 표시</strong> — 같은 상황에서 2번 경보가 발생했고, 응답에는 매번 기준 시각이 붙었다</p><p class='muted'>403 재시도: 없음 — 데이터 제공처 정책(non-200 시 즉시 중단)을 코드가 강제한다</p></div><h2>전파 비용 · 병목은 전파가 아니었다</h2><p class='muted'>전체 16,564개를 7일치 1시간 간격으로 전파: <strong>0.712초</strong> (상태벡터 2,799,316개, 초당 3,933,677회). 샘플 간격을 1분으로 줄이면 42.4초 · 저장 시 7.5GB. 측정 환경: Python 3.12.12 · C++ 가속 True · arm64</p>
+<h2>결과 교체 중 조회 공백</h2><p class='muted'>전체 교체는 기존 결과를 지운 뒤 다시 채우는 방식이고, 버전 교체는 새 버전에 모두 기록한 뒤 참조만 바꾸는 방식입니다. 로컬 MongoDB 단일 노드와 합성 문서로 측정했습니다.</p><div class='scroll'><table><tr><th>문서 수</th><th>전체 교체 공백</th><th>불완전 조회 비율</th><th>버전 교체 공백</th><th>게시 시간 (전체 / 버전)</th></tr><tr><td>15,000</td><td class='warn'>76ms</td><td class='warn'>10.87%</td><td class='ok'>0ms</td><td>0.094초 / 0.067초</td></tr><tr><td>60,000</td><td class='warn'>331ms</td><td class='warn'>35.85%</td><td class='ok'>0ms</td><td>0.347초 / 0.19초</td></tr><tr><td>240,000</td><td class='warn'>1,372ms</td><td class='warn'>72.86%</td><td class='ok'>0ms</td><td>1.425초 / 0.67초</td></tr></table></div><h2>데이터 소스 장애 시 동작</h2><div class='note'><p><strong>기준 시각 표시 없이 진행</strong><br>3개 주기 동안 최대 6시간 지난 데이터를 제공했고, 이를 알리는 신호가 없었습니다.</p><p><strong>기준 시각 표시와 경보</strong><br>같은 상황에서 경보가 2회 발생했고, 모든 응답에 기준 시각이 포함되었습니다.</p><p class='muted'>403 응답에는 재시도하지 않습니다. 200이 아닌 응답을 받으면 요청을 중단하라는 제공처 정책을 코드에서 지킵니다.</p></div><h2>궤도 전파 비용</h2><p class='muted'>활성 객체 16,564개를 7일분, 1시간 간격으로 전파하는 데 <strong>0.712초</strong>가 걸렸습니다 (상태벡터 2,799,316개, 초당 3,933,677개). 샘플 간격을 1분으로 줄이면 약 42.4초, 결과를 모두 저장하면 약 7.5GB가 필요합니다. 측정 환경: Python 3.12.12, sgp4 C++ 가속 사용, arm64</p>
 
-<h2>수집 실행 원장</h2>
+<h2>수집 실행 기록</h2>
 <div class="scroll"><table>
-<tr><th>수집 시각(UTC)</th><th>상태</th><th>HTTP</th><th>객체 수</th><th>소요(s)</th><th>예약 대비 지연(s)</th></tr>
-<tr><td>2026-09-13T02:52:02Z</td><td class='warn'>skipped</td><td>–</td><td>–</td><td>–</td><td>–</td></tr><tr><td>2026-09-13T02:38:40Z</td><td class='warn'>skipped</td><td>–</td><td>–</td><td>–</td><td>–</td></tr><tr><td>2026-09-13T02:29:09Z</td><td class='ok'>ok</td><td>200</td><td>16564</td><td>2.348</td><td>–</td></tr>
+<tr><th>수집 시각(UTC)</th><th>결과</th><th>HTTP</th><th>객체 수</th><th>소요 시간(초)</th><th>예약 대비 지연(분)</th></tr>
+<tr><td>2026-09-14T01:07:57Z</td><td class='warn'>건너뜀</td><td>–</td><td>–</td><td>–</td><td>51</td></tr><tr><td>2026-09-13T23:11:24Z</td><td class='ok'>성공</td><td>200</td><td>16563</td><td>1.71</td><td>54</td></tr><tr><td>2026-09-13T20:52:38Z</td><td class='ok'>성공</td><td>200</td><td>16563</td><td>1.333</td><td>36</td></tr><tr><td>2026-09-13T17:25:22Z</td><td class='ok'>성공</td><td>200</td><td>16563</td><td>2.372</td><td>8</td></tr><tr><td>2026-09-13T13:49:10Z</td><td class='ok'>성공</td><td>200</td><td>16563</td><td>1.375</td><td>32</td></tr><tr><td>2026-09-13T08:21:22Z</td><td class='ok'>성공</td><td>200</td><td>16563</td><td>3.739</td><td>4</td></tr><tr><td>2026-09-13T02:52:02Z</td><td class='warn'>건너뜀</td><td>–</td><td>–</td><td>–</td><td>–</td></tr><tr><td>2026-09-13T02:38:40Z</td><td class='warn'>건너뜀</td><td>–</td><td>–</td><td>–</td><td>–</td></tr><tr><td>2026-09-13T02:29:09Z</td><td class='ok'>성공</td><td>200</td><td>16564</td><td>2.348</td><td>–</td></tr>
 </table></div>
 
-<h2>읽는 법과 한계</h2>
+<h2>측정 조건과 한계</h2>
 <div class="note">
-<p><strong>이 페이지는 무엇인가</strong> — 시간 기반 일괄 처리와 데이터 기반 증분 처리의 차이를
-공개 데이터로 직접 재보기 위한 실험입니다. 정밀 충돌분석이 아니며, 스크리닝은 계산 부하를 보기 위한 단순화 버전입니다.</p>
-<p><strong>한계</strong> — ① EPOCH는 발행 시각이 아니라 궤도 상태의 기준 시각입니다.
-② CelesTrak은 2시간마다 갱신되며, 다른 데이터 제공처와 갱신 주기가 다릅니다.
-③ 원본 스냅샷은 레포에 보관하지 않습니다(용량). 재현은 <code>collect/fetch_gp.py</code>로 가능합니다.</p>
-<p><strong>데이터 이용 정책</strong> — CelesTrak 정책에 따라 갱신 주기(2시간)당 1회만 요청하고,
-200이 아닌 응답을 받으면 재시도하지 않고 직전 스냅샷으로 대체합니다.</p>
+<p><strong>페이지 목적</strong><br>정해진 시각에 전체를 다시 계산하는 방식과, 데이터가 바뀐 경우에만 변경분을 계산하는 방식의 차이를
+공개 데이터로 측정한 실험입니다. 근접 분석(충돌 위험 계산)은 포함하지 않습니다.</p>
+<p><strong>한계</strong><br>EPOCH는 게시 시각이 아니라 궤도를 결정한 기준 시각입니다.
+CelesTrak은 2시간마다 갱신되며 다른 데이터 제공처와 갱신 주기가 다릅니다.
+원본 스냅샷은 용량 문제로 저장소에 보관하지 않으며, <code>collect/fetch_gp.py</code>로 다시 받을 수 있습니다.
+2026-09-14 이전 수집 기록의 예약 시각에는 계산 오류가 있어, 지연은 실제 시작 시각 기준으로 다시 계산해 표시합니다.
+예약 지연은 GitHub Actions 무료 스케줄러의 관측값입니다.</p>
+<p><strong>데이터 이용 정책</strong><br>CelesTrak 정책에 따라 2시간 갱신 주기당 1회만 요청하고,
+200이 아닌 응답을 받으면 재시도하지 않고 직전 스냅샷을 사용합니다.</p>
 </div>
 
 </div></body></html>
