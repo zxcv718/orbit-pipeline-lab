@@ -1,6 +1,6 @@
 {
-  "snapshot": "data/snapshots/gp-active-20260914T230918Z.csv",
-  "measured_at": "2026-09-14T23:09:19Z",
+  "snapshot": "data/snapshots/gp-active-20260915T013009Z.csv",
+  "measured_at": "2026-09-15T01:30:10Z",
   "objects_total": 16563,
   "e6_schema_risk": {
     "norad_over_99999": 549,
@@ -11,16 +11,16 @@
   "e1_epoch_age_hours": {
     "count": 16563,
     "no_epoch": 0,
-    "p50": 13.13,
-    "p75": 19.24,
-    "p90": 25.04,
-    "p95": 30.55,
-    "max": 669.37,
-    "mean": 15.78,
+    "p50": 15.47,
+    "p75": 21.58,
+    "p90": 27.38,
+    "p95": 32.9,
+    "max": 671.72,
+    "mean": 18.12,
     "share_under_2h_pct": 0.02,
-    "share_under_6h_pct": 0.26,
-    "share_under_12h_pct": 43.42,
-    "share_under_24h_pct": 87.43,
-    "share_under_48h_pct": 99.29
+    "share_under_6h_pct": 0.07,
+    "share_under_12h_pct": 26.96,
+    "share_under_24h_pct": 82.77,
+    "share_under_48h_pct": 99.22
   }
 }
